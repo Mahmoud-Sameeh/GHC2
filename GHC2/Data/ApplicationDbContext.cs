@@ -9,10 +9,21 @@ namespace GHC2.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        public virtual DbSet<Admin> Admins { get; set; }
+        public virtual DbSet<Analysis> Analyses { get; set; }
+        public virtual DbSet<Appointment> Appointments { get; set; }
+        public virtual DbSet<Chat> Chats { get; set; }
+        public virtual DbSet<Diagnose> Diagnoses { get; set; }
+        public virtual DbSet<DiagnosePrescription> DiagnosePrescriptions { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<Medicine> Medicines { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<PrescriptionMedicine> PrescriptionMedicines { get; set; }
+        public virtual DbSet<Radiation> Radiations { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }
+        }    
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
