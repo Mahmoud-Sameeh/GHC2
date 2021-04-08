@@ -4,28 +4,26 @@ using GHC2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GHC2.Data.Migrations
+namespace GHC2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210408122240_aaaa")]
-    partial class aaaa
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:Collation", "Latin1_General_CI_AS")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("GHC2.Models.Admin", b =>
                 {
-                    b.Property<int>("Nid")
-                        .HasColumnType("int")
+                    b.Property<long>("Nid")
+                        .HasColumnType("bigint")
                         .HasColumnName("NID");
 
                     b.Property<string>("Address")
@@ -58,8 +56,8 @@ namespace GHC2.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("Phone")
-                        .HasColumnType("int");
+                    b.Property<long?>("Phone")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Position")
                         .IsRequired()
@@ -79,9 +77,9 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.Analysis", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -93,15 +91,15 @@ namespace GHC2.Data.Migrations
                     b.Property<DateTime?>("DateAndTime")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("DocId")
-                        .HasColumnType("int")
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint")
                         .HasColumnName("DocID");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int")
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint")
                         .HasColumnName("PatientID");
 
                     b.Property<string>("Report")
@@ -119,14 +117,14 @@ namespace GHC2.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Analysis");
+                    b.ToTable("Analyses");
                 });
 
             modelBuilder.Entity("GHC2.Models.Appointment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -141,15 +139,15 @@ namespace GHC2.Data.Migrations
                     b.Property<DateTime>("AppointmetDateTime")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("DocId")
-                        .HasColumnType("int")
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint")
                         .HasColumnName("DocID");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int")
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint")
                         .HasColumnName("PatientID");
 
                     b.HasKey("Id");
@@ -163,25 +161,25 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.Chat", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("DateAndTime")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("DocId")
-                        .HasColumnType("int")
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint")
                         .HasColumnName("DocID");
 
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int")
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint")
                         .HasColumnName("PatientID");
 
                     b.HasKey("Id");
@@ -195,9 +193,9 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.Diagnose", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -208,12 +206,12 @@ namespace GHC2.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DocId")
-                        .HasColumnType("int")
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint")
                         .HasColumnName("DocID");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int")
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint")
                         .HasColumnName("PatientID");
 
                     b.Property<string>("RequiredAnalyses")
@@ -235,14 +233,14 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.DiagnosePrescription", b =>
                 {
-                    b.Property<int>("PrescriptionId")
+                    b.Property<long>("PrescriptionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("PrescriptionID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DiagnoseId")
-                        .HasColumnType("int")
+                    b.Property<long>("DiagnoseId")
+                        .HasColumnType("bigint")
                         .HasColumnName("DiagnoseID");
 
                     b.HasKey("PrescriptionId");
@@ -254,8 +252,8 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.Doctor", b =>
                 {
-                    b.Property<int>("Nid")
-                        .HasColumnType("int")
+                    b.Property<long>("Nid")
+                        .HasColumnType("bigint")
                         .HasColumnName("NID");
 
                     b.Property<string>("Address")
@@ -293,8 +291,8 @@ namespace GHC2.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("Phone")
-                        .HasColumnType("int");
+                    b.Property<long?>("Phone")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Specialty")
                         .IsRequired()
@@ -316,9 +314,9 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.Medicine", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -342,8 +340,8 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.Patient", b =>
                 {
-                    b.Property<int>("Nid")
-                        .HasColumnType("int")
+                    b.Property<long>("Nid")
+                        .HasColumnType("bigint")
                         .HasColumnName("NID");
 
                     b.Property<string>("Address")
@@ -376,8 +374,8 @@ namespace GHC2.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("Phone")
-                        .HasColumnType("int");
+                    b.Property<long?>("Phone")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Nid")
                         .HasName("PK_Patient_1");
@@ -391,16 +389,16 @@ namespace GHC2.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("MedicineId")
-                        .HasColumnType("int")
+                    b.Property<long>("MedicineId")
+                        .HasColumnType("bigint")
                         .HasColumnName("MedicineID");
 
                     b.Property<string>("Note")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("PrescriptionId")
-                        .HasColumnType("int")
+                    b.Property<long>("PrescriptionId")
+                        .HasColumnType("bigint")
                         .HasColumnName("PrescriptionID");
 
                     b.HasIndex("MedicineId");
@@ -412,9 +410,9 @@ namespace GHC2.Data.Migrations
 
             modelBuilder.Entity("GHC2.Models.Radiation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -426,15 +424,15 @@ namespace GHC2.Data.Migrations
                     b.Property<DateTime?>("DateAndTime")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("DocId")
-                        .HasColumnType("int")
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint")
                         .HasColumnName("DocID");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int")
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint")
                         .HasColumnName("PatientID");
 
                     b.Property<string>("Report")
@@ -598,12 +596,10 @@ namespace GHC2.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -640,12 +636,10 @@ namespace GHC2.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");

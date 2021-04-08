@@ -1,25 +1,22 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GHC2.Data.Migrations
+namespace GHC2.Migrations
 {
-    public partial class aaaa : Migration
+    public partial class intgg : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase(
-                collation: "Latin1_General_CI_AS");
-
             migrationBuilder.CreateTable(
                 name: "Admin",
                 columns: table => new
                 {
-                    NID = table.Column<int>(type: "int", nullable: false),
+                    NID = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     BitrhDate = table.Column<DateTime>(type: "date", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Phone = table.Column<int>(type: "int", nullable: true),
+                    Phone = table.Column<long>(type: "bigint", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -32,15 +29,54 @@ namespace GHC2.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Doctor",
                 columns: table => new
                 {
-                    NID = table.Column<int>(type: "int", nullable: false),
+                    NID = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     BitrhDate = table.Column<DateTime>(type: "date", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Phone = table.Column<int>(type: "int", nullable: true),
+                    Phone = table.Column<long>(type: "bigint", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -57,7 +93,7 @@ namespace GHC2.Data.Migrations
                 name: "Medicine",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Specialty = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -72,12 +108,12 @@ namespace GHC2.Data.Migrations
                 name: "Patient",
                 columns: table => new
                 {
-                    NID = table.Column<int>(type: "int", nullable: false),
+                    NID = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     BitrhDate = table.Column<DateTime>(type: "date", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Phone = table.Column<int>(type: "int", nullable: true),
+                    Phone = table.Column<long>(type: "bigint", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -88,22 +124,128 @@ namespace GHC2.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Analysis",
+                name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Analyses",
+                columns: table => new
+                {
+                    ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DateAndTime = table.Column<DateTime>(type: "datetime", nullable: true),
-                    PatientID = table.Column<int>(type: "int", nullable: false),
-                    DocID = table.Column<int>(type: "int", nullable: false),
+                    PatientID = table.Column<long>(type: "bigint", nullable: false),
+                    DocID = table.Column<long>(type: "bigint", nullable: false),
                     Report = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AttachURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Analysis", x => x.ID);
+                    table.PrimaryKey("PK_Analyses", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Analyses_Doctor",
                         column: x => x.DocID,
@@ -122,10 +264,10 @@ namespace GHC2.Data.Migrations
                 name: "Appointment",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientID = table.Column<int>(type: "int", nullable: false),
-                    DocID = table.Column<int>(type: "int", nullable: false),
+                    PatientID = table.Column<long>(type: "bigint", nullable: false),
+                    DocID = table.Column<long>(type: "bigint", nullable: false),
                     AppointmetDateTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Accepted = table.Column<string>(type: "nchar(10)", fixedLength: true, maxLength: 10, nullable: false, defaultValueSql: "(N'NO')")
@@ -151,10 +293,10 @@ namespace GHC2.Data.Migrations
                 name: "Chat",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientID = table.Column<int>(type: "int", nullable: false),
-                    DocID = table.Column<int>(type: "int", nullable: false),
+                    PatientID = table.Column<long>(type: "bigint", nullable: false),
+                    DocID = table.Column<long>(type: "bigint", nullable: false),
                     DateAndTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -179,14 +321,14 @@ namespace GHC2.Data.Migrations
                 name: "Diagnose",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DiagnoseDateTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     DiagnoseDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequiredRadiation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     RequiredAnalyses = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    PatientID = table.Column<int>(type: "int", nullable: false),
-                    DocID = table.Column<int>(type: "int", nullable: false)
+                    PatientID = table.Column<long>(type: "bigint", nullable: false),
+                    DocID = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -209,12 +351,12 @@ namespace GHC2.Data.Migrations
                 name: "Radiation",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DateAndTime = table.Column<DateTime>(type: "datetime", nullable: true),
-                    PatientID = table.Column<int>(type: "int", nullable: false),
-                    DocID = table.Column<int>(type: "int", nullable: false),
+                    PatientID = table.Column<long>(type: "bigint", nullable: false),
+                    DocID = table.Column<long>(type: "bigint", nullable: false),
                     Report = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AttachURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -240,9 +382,9 @@ namespace GHC2.Data.Migrations
                 name: "Diagnose_Prescription",
                 columns: table => new
                 {
-                    PrescriptionID = table.Column<int>(type: "int", nullable: false)
+                    PrescriptionID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DiagnoseID = table.Column<int>(type: "int", nullable: false)
+                    DiagnoseID = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -259,8 +401,8 @@ namespace GHC2.Data.Migrations
                 name: "Prescription_Medicine",
                 columns: table => new
                 {
-                    PrescriptionID = table.Column<int>(type: "int", nullable: false),
-                    MedicineID = table.Column<int>(type: "int", nullable: false),
+                    PrescriptionID = table.Column<long>(type: "bigint", nullable: false),
+                    MedicineID = table.Column<long>(type: "bigint", nullable: false),
                     Dose = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Note = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
@@ -281,13 +423,13 @@ namespace GHC2.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Analysis_DocID",
-                table: "Analysis",
+                name: "IX_Analyses_DocID",
+                table: "Analyses",
                 column: "DocID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Analysis_PatientID",
-                table: "Analysis",
+                name: "IX_Analyses_PatientID",
+                table: "Analyses",
                 column: "PatientID");
 
             migrationBuilder.CreateIndex(
@@ -299,6 +441,45 @@ namespace GHC2.Data.Migrations
                 name: "IX_Appointment_PatientID",
                 table: "Appointment",
                 column: "PatientID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chat_DocID",
@@ -358,10 +539,25 @@ namespace GHC2.Data.Migrations
                 name: "Admin");
 
             migrationBuilder.DropTable(
-                name: "Analysis");
+                name: "Analyses");
 
             migrationBuilder.DropTable(
                 name: "Appointment");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
                 name: "Chat");
@@ -371,6 +567,12 @@ namespace GHC2.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Radiation");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Diagnose_Prescription");
@@ -386,9 +588,6 @@ namespace GHC2.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Patient");
-
-            migrationBuilder.AlterDatabase(
-                oldCollation: "Latin1_General_CI_AS");
         }
     }
 }

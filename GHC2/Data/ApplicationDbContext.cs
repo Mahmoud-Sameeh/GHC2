@@ -9,6 +9,11 @@ namespace GHC2.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+     
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Analysis> Analyses { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
@@ -20,10 +25,6 @@ namespace GHC2.Data
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PrescriptionMedicine> PrescriptionMedicines { get; set; }
         public virtual DbSet<Radiation> Radiations { get; set; }
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }    
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

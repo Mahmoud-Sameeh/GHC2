@@ -7,8 +7,8 @@ namespace GHC2.Models
 {
     public class PrescriptionMedicine
     {
-        public int PrescriptionId { get; set; }
-        public int MedicineId { get; set; }
+        public Int64 PrescriptionId { get; set; }
+        public Int64 MedicineId { get; set; }
         public string Dose { get; set; }
         public string Note { get; set; }
 

@@ -7,13 +7,13 @@ namespace GHC2.Models
 {
     public class Diagnose
     {
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
         public DateTime DiagnoseDateTime { get; set; }
         public string DiagnoseDescription { get; set; }
         public string RequiredRadiation { get; set; }
         public string RequiredAnalyses { get; set; }
-        public int PatientId { get; set; }
-        public int DocId { get; set; }
+        public Int64 PatientId { get; set; }
+        public Int64 DocId { get; set; }
 
         public virtual Doctor Doc { get; set; }
         public virtual Patient Patient { get; set; }

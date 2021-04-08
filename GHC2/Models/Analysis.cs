@@ -7,11 +7,11 @@ namespace GHC2.Models
 {
     public class Analysis
     {
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
         public string Type { get; set; }
         public DateTime? DateAndTime { get; set; }
-        public int PatientId { get; set; }
-        public int DocId { get; set; }
+        public Int64 PatientId { get; set; }
+        public Int64 DocId { get; set; }
         public string Report { get; set; }
         public string Note { get; set; }
         public string AttachUrl { get; set; }

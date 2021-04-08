@@ -7,9 +7,9 @@ namespace GHC2.Models
 {
     public class Appointment
     {
-        public int Id { get; set; }
-        public int PatientId { get; set; }
-        public int DocId { get; set; }
+        public Int64 Id { get; set; }
+        public Int64 PatientId { get; set; }
+        public Int64 DocId { get; set; }
         public DateTime AppointmetDateTime { get; set; }
         public string Note { get; set; }
         public string Accepted { get; set; }
