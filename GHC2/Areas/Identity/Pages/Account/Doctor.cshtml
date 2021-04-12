@@ -1,11 +1,7 @@
 ﻿@page
 @model GHC2.Areas.Identity.Pages.Account.DoctorModel
-@{
-    var RoleDoctor = "Doctor";
-    var RolePatient = "Patient";
-    var RoleAdmin = "Admin";
-}
-<ul class="nav nav-tabs">
+
+<ul class="nav nav-tabs" style="display:none">
     <li class="active"><a data-toggle="tab" href="#home">Doctor</a></li>
     <li><a data-toggle="tab" href="#menu1">Patient 1</a></li>
     <li><a data-toggle="tab" href="#menu2">Admin </a></li>
@@ -13,7 +9,7 @@
 </ul>
 
 <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
+    <div id="home" class="tab-pane fade ">
 
         <form method="post">
             <div class="row">
@@ -21,11 +17,7 @@
                     <h1>Doctor Registration</h1>
                     <hr />
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="Input.Name"></label>
-                        <input asp-for="Input.Name" class="form-control" />
-                        <span asp-validation-for="Input.Name" class="text-danger"></span>
-                    </div>
+                 
                     <div class="form-group">
                         <label asp-for="Input.UserName"></label>
                         <input asp-for="Input.UserName" class="form-control" />
@@ -106,7 +98,7 @@
             </div>
         </form>
     </div>
-    <div id="menu1" class="tab-pane fade">
+    <div id="menu1" class="tab-pane fade in active show " >
         <h1>Patient Registration</h1>
         <form method="post">
             <div class="row">
@@ -114,9 +106,9 @@
                     <hr />
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group">
-                        <label asp-for="Input.Name"></label>
-                        <input asp-for="Input.Name" class="form-control" />
-                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                        <label asp-for="Input.SNN"></label>
+                        <input asp-for="Input.SNN" class="form-control" />
+                        <span asp-validation-for="Input.SNN" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Input.UserName"></label>
@@ -138,17 +130,12 @@
                 </div>
                 <div class="col-md-4 col-md-offset-2">
                     <hr />
-                    <br />
-                    <div class="form-group">
+                    <div class="form-group" style="display:none">
                         <label asp-for="Input.Role"></label>
                         <input asp-for="Input.Role" value="Patient" class="form-control" />
                         <span asp-validation-for="Input.Role" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Input.SNN"></label>
-                        <input asp-for="Input.SNN" class="form-control" />
-                        <span asp-validation-for="Input.SNN" class="text-danger"></span>
-                    </div>
+                  
                     <div class="form-group " colspan="2">
                         <label asp-for="Input.Phone"></label>
                         <input asp-for="Input.Phone" class="form-control" />
@@ -158,12 +145,15 @@
                         <label asp-for="Input.Email"></label>
                         <input asp-for="Input.Email" class="form-control" />
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>  <div class="form-group">
+                        <label asp-for="Input.Speciality"></label>
+                        <input asp-for="Input.Speciality" class="form-control" />
+                        <span asp-validation-for="Input.Speciality" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="col-md-4 col-md-offset-2">
                     <hr />
-                    <br />
                     <div class="form-group">
                         <label asp-for="Input.ImgUrl"></label>
                         <input asp-for="Input.ImgUrl" class="form-control" />
@@ -178,6 +168,10 @@
                         <label asp-for="Input.Address"></label>
                         <input asp-for="Input.Address" class="form-control" />
                         <span asp-validation-for="Input.Address" class="text-danger"></span>
+                    </div>   <div class="form-group">
+                        <label asp-for="Input.Degree"></label>
+                        <input asp-for="Input.Degree" class="form-control" />
+                        <span asp-validation-for="Input.Degree" class="text-danger"></span>
                     </div>
 
 
@@ -194,10 +188,11 @@
                     <hr />
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group">
-                        <label asp-for="Input.Name"></label>
-                        <input asp-for="Input.Name" class="form-control" />
-                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                        <label asp-for="Input.SNN"></label>
+                        <input asp-for="Input.SNN" class="form-control" />
+                        <span asp-validation-for="Input.SNN" class="text-danger"></span>
                     </div>
+
                     <div class="form-group">
                         <label asp-for="Input.UserName"></label>
                         <input asp-for="Input.UserName" class="form-control" />
@@ -224,12 +219,7 @@
                         <input asp-for="Input.Role" value="Admin" class="form-control" />
                         <span asp-validation-for="Input.Role" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Input.SNN"></label>
-                        <input asp-for="Input.SNN" class="form-control" />
-                        <span asp-validation-for="Input.SNN" class="text-danger"></span>
-                    </div>
-                    <div class="form-group " colspan="2">
+                     <div class="form-group " colspan="2">
                         <label asp-for="Input.Phone"></label>
                         <input asp-for="Input.Phone" class="form-control" />
                         <span asp-validation-for="Input.Phone" class="text-danger"></span>

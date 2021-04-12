@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+using GHC2.Data;
 
 namespace GHC2.Areas.Identity.Pages.Account
 {
@@ -20,14 +22,17 @@ namespace GHC2.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext db;
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<IdentityUser> userManager)
+            ApplicationDbContext _db,
+        UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            db = _db;
         }
 
         [BindProperty]
@@ -43,8 +48,12 @@ namespace GHC2.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public string UserName { get; set; }
+            [Required]
+            public string Role { get; set; }
+            [Required]
+            public string SSN { get; set; }
+
 
             [Required]
             [DataType(DataType.Password)]
@@ -79,9 +88,25 @@ namespace GHC2.Areas.Identity.Pages.Account
         
             if (ModelState.IsValid)
             {
+                SignInResult result;
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                if (Input.Role!="Patient")
+                {
+                    result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+                }
+                else
+                {
+                   var found = db.Patients.FirstOrDefault(s => s.Nid == Int64.Parse(Input.SSN));
+                    if(found!=null)
+                    {
+                        Input.UserName = found.Name; };
+
+                }
+                
+                        result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                   
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

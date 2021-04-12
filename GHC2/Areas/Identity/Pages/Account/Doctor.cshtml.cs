@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using GHC2.Data;
+using GHC2.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -52,16 +53,15 @@ namespace GHC2.Areas.Identity.Pages.Account
         {
 
 
-            [Required]
-            public string Name { get; set; }
+          
             [Required]
             public string UserName { get; set; }
             [Required]
-            public string SNN { get; set; }
+            public Int64 SNN { get; set; }
             [Required]
             public string Gender { get; set; }
             [Required]
-            public string Phone { get; set; }
+            public Int64 Phone { get; set; }
             [Required]
             public string Role { get; set; }
             [Required]
@@ -95,7 +95,7 @@ namespace GHC2.Areas.Identity.Pages.Account
             [Required]
             public int YearOFGraduation { get; set; }
             [Required]
-            public int Speciality { get; set; }
+            public string Speciality { get; set; }
             [Required]
             public string Degree { get; set; }
 
@@ -109,20 +109,21 @@ namespace GHC2.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-
+            
 
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-
+                
 
                 var user = new IdentityUser
                 {
+                    
                     UserName = Input.UserName,
                     Email = Input.Email,
                     PasswordHash = Input.Password,
-                    PhoneNumber = Input.Phone,
+                    PhoneNumber = Input.Phone.ToString(),
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -142,23 +143,30 @@ namespace GHC2.Areas.Identity.Pages.Account
                     }
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                      
                     }
-                    if(Input.Role=="Doctor")
+                    if (Input.Role=="Patient")
                     {
 
-                        _db.Doctors.Add(new Models.Doctor {
-                            //Nid = Int32.Parse(Input.SNN),
-                        Address = Input.Address,
+                        _db.Patients.Add(new Models.Patient {
+                            Nid = Input.SNN,
+                            Address = Input.Address,
                             BitrhDate = Input.BirthDate,
-                            Degree = Input.Degree,
+                        //    Degree = Input.Degree,
                             Email = Input.Email,
                             Gender = Input.Gender,
-                         //   Phone = Input.Phone,
+                            Phone = Input.Phone,
+                            ImageUrl=Input.ImgUrl,
+                            Name=Input.UserName,
+                            Password=Input.Password,
+                     //       UserName=Input.UserName,
+                       //     Specialty=Input.Speciality
+                        }) ;
+                        _db.SaveChanges();
+                        return LocalRedirect(returnUrl);
 
-                        }) ;;
                     }
                 }
+                
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
