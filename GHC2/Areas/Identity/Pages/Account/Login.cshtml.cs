@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using GHC2.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace GHC2.Areas.Identity.Pages.Account
 {
@@ -24,7 +25,7 @@ namespace GHC2.Areas.Identity.Pages.Account
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext db;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, 
+        public LoginModel(SignInManager<IdentityUser> signInManager,
             ILogger<LoginModel> logger,
             ApplicationDbContext _db,
         UserManager<IdentityUser> userManager)
@@ -52,7 +53,7 @@ namespace GHC2.Areas.Identity.Pages.Account
             [Required]
             public string Role { get; set; }
             [Required]
-            public string SSN { get; set; }
+            public Int64 SSN { get; set; }
 
 
             [Required]
@@ -83,32 +84,62 @@ namespace GHC2.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-
+            var 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        
+
             if (ModelState.IsValid)
             {
                 SignInResult result;
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                if (Input.Role!="Patient")
+                if (Input.Role != "Patient")
                 {
-                    result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                    if (Input.Role == "Doctor")
+                    {
+                        if (db.Doctors.FirstOrDefault(z => z.UserName == Input.UserName) != null)
+
+                            result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                        if (db.Admins.FirstOrDefault(z => z.UserName == Input.UserName) != null)
+
+                            result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+                    }
 
                 }
                 else
                 {
-                   var found = db.Patients.FirstOrDefault(s => s.Nid == Int64.Parse(Input.SSN));
-                    if(found!=null)
+                    var found = db.Patients.FirstOrDefault(s => s.Nid == Input.SSN);
+                    if (found != null)
                     {
-                        Input.UserName = found.Name; };
+                        Input.UserName = found.Name;
+
+                    };
 
                 }
-                
-                        result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                   
+                result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+
                 if (result.Succeeded)
                 {
+                    if (Input.Role == "Patient")
+                    {
+                        _logger.LogInformation("User logged in.");
+
+                        return RedirectToAction("GetPatientProfileReadonly", "Patient");
+                    }
+                    else if (Input.Role == "Doctor")
+                    {
+                        _logger.LogInformation("User logged in.");
+
+                        return RedirectToAction("DoctorIndex", "Doctors");
+                    }
+                    else
+                    {
+                        _logger.LogInformation("User logged in.");
+
+                        return RedirectToAction("Index", "Admins");
+
+                    }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

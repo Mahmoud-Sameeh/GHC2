@@ -31,8 +31,8 @@ namespace GHC2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("BitrhDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("BitrhDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Email")
                         .HasMaxLength(50)
@@ -42,6 +42,9 @@ namespace GHC2.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("IdentityId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -88,7 +91,7 @@ namespace GHC2.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("AttachURL");
 
-                    b.Property<DateTime?>("DateAndTime")
+                    b.Property<DateTime>("DateAndTime")
                         .HasColumnType("datetime");
 
                     b.Property<long>("DocId")
@@ -132,9 +135,8 @@ namespace GHC2.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .HasDefaultValueSql("(N'NO')")
-                        .IsFixedLength(true);
+                        .HasColumnType("nvarchar(10)")
+                        .HasDefaultValueSql("(N'NO')");
 
                     b.Property<DateTime>("AppointmetDateTime")
                         .HasColumnType("datetime");
@@ -161,34 +163,38 @@ namespace GHC2.Migrations
 
             modelBuilder.Entity("GHC2.Models.Chat", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("ID")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateAndTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<long>("DocId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("DocID");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("PatientID");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocId");
+                    b.ToTable("Chats");
+                });
 
-                    b.HasIndex("PatientId");
+            modelBuilder.Entity("GHC2.Models.ChatUser", b =>
+                {
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
 
-                    b.ToTable("Chat");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("userRole")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChatId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatUsers");
                 });
 
             modelBuilder.Entity("GHC2.Models.Diagnose", b =>
@@ -262,7 +268,8 @@ namespace GHC2.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("BitrhDate")
-                        .HasColumnType("date");
+                        .IsRequired()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Degree")
                         .IsRequired()
@@ -277,6 +284,9 @@ namespace GHC2.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("IdentityId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -338,6 +348,32 @@ namespace GHC2.Migrations
                     b.ToTable("Medicine");
                 });
 
+            modelBuilder.Entity("GHC2.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimeStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("GHC2.Models.Patient", b =>
                 {
                     b.Property<long>("Nid")
@@ -349,8 +385,11 @@ namespace GHC2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("BitrhDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("BitrhDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("BloodGroup")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(50)
@@ -360,6 +399,9 @@ namespace GHC2.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("IdentityId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -385,6 +427,11 @@ namespace GHC2.Migrations
 
             modelBuilder.Entity("GHC2.Models.PrescriptionMedicine", b =>
                 {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<string>("Dose")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -400,6 +447,9 @@ namespace GHC2.Migrations
                     b.Property<long>("PrescriptionId")
                         .HasColumnType("bigint")
                         .HasColumnName("PrescriptionID");
+
+                    b.HasKey("Id")
+                        .HasName("PK_PrescriptionMedicine");
 
                     b.HasIndex("MedicineId");
 
@@ -417,11 +467,10 @@ namespace GHC2.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AttachUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("AttachURL");
 
-                    b.Property<DateTime?>("DateAndTime")
+                    b.Property<DateTime>("DateAndTime")
                         .HasColumnType("datetime");
 
                     b.Property<long>("DocId")
@@ -516,6 +565,10 @@ namespace GHC2.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -567,6 +620,8 @@ namespace GHC2.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -649,6 +704,13 @@ namespace GHC2.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("GHC2.Models.Uesr", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.HasDiscriminator().HasValue("Uesr");
+                });
+
             modelBuilder.Entity("GHC2.Models.Analysis", b =>
                 {
                     b.HasOne("GHC2.Models.Doctor", "Doc")
@@ -687,23 +749,23 @@ namespace GHC2.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("GHC2.Models.Chat", b =>
+            modelBuilder.Entity("GHC2.Models.ChatUser", b =>
                 {
-                    b.HasOne("GHC2.Models.Doctor", "Doc")
-                        .WithMany("Chats")
-                        .HasForeignKey("DocId")
-                        .HasConstraintName("FK_Chat_Doctor")
+                    b.HasOne("GHC2.Models.Chat", "Chat")
+                        .WithMany("Uesrs")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GHC2.Models.Patient", "Patient")
+                    b.HasOne("GHC2.Models.Uesr", "User")
                         .WithMany("Chats")
-                        .HasForeignKey("PatientId")
-                        .HasConstraintName("FK_Chat_Patient")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Doc");
+                    b.Navigation("Chat");
 
-                    b.Navigation("Patient");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GHC2.Models.Diagnose", b =>
@@ -734,6 +796,17 @@ namespace GHC2.Migrations
                         .IsRequired();
 
                     b.Navigation("Diagnose");
+                });
+
+            modelBuilder.Entity("GHC2.Models.Message", b =>
+                {
+                    b.HasOne("GHC2.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("GHC2.Models.PrescriptionMedicine", b =>
@@ -825,6 +898,13 @@ namespace GHC2.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GHC2.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Uesrs");
+                });
+
             modelBuilder.Entity("GHC2.Models.Diagnose", b =>
                 {
                     b.Navigation("DiagnosePrescriptions");
@@ -835,8 +915,6 @@ namespace GHC2.Migrations
                     b.Navigation("Analyses");
 
                     b.Navigation("Appointments");
-
-                    b.Navigation("Chats");
 
                     b.Navigation("Diagnoses");
 
@@ -849,11 +927,14 @@ namespace GHC2.Migrations
 
                     b.Navigation("Appointments");
 
-                    b.Navigation("Chats");
-
                     b.Navigation("Diagnoses");
 
                     b.Navigation("Radiations");
+                });
+
+            modelBuilder.Entity("GHC2.Models.Uesr", b =>
+                {
+                    b.Navigation("Chats");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,7 +9,7 @@ namespace GHC2.Models
     {
         public Int64 Id { get; set; }
         public string Type { get; set; }
-        public DateTime? DateAndTime { get; set; }
+        public DateTime DateAndTime { get; set; }
         public Int64 PatientId { get; set; }
         public Int64 DocId { get; set; }
         public string Report { get; set; }

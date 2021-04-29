@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GHC2.Data;
 using GHC2.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace GHC2.Controllers
 {
@@ -14,9 +15,18 @@ namespace GHC2.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public AdminsController(ApplicationDbContext context)
+        public SignInManager<IdentityUser> _SignInManager { get; }
+        public UserManager<IdentityUser> _UserManager { get; }
+        public RoleManager<IdentityRole> _RoleManager { get; }
+
+
+        public AdminsController(ApplicationDbContext context ,  SignInManager<IdentityUser> SignInManager
+                                ,UserManager<IdentityUser> UserManager, RoleManager<IdentityRole> RoleManager)
         {
             _context = context;
+            _SignInManager = SignInManager;
+            _UserManager = UserManager;
+            _RoleManager = RoleManager;
         }
 
         // GET: Admins
@@ -58,8 +68,30 @@ namespace GHC2.Controllers
         {
             if (ModelState.IsValid)
             {
+                // userName in identity = Nid in admin
+
+                var role = _RoleManager.Roles.Where(e => e.Name == "Admin").FirstOrDefault();
+                if (role == null)
+                {
+                    role = new IdentityRole
+                    {
+                        Name="Admin"
+                    };
+                  await _RoleManager.CreateAsync(role);
+                }
+                var user = new IdentityUser
+                {
+                    UserName=admin.Nid.ToString(),
+                    Email=admin.Email,
+                    PhoneNumber= admin.Phone.ToString()
+                };
                 _context.Add(admin);
                 await _context.SaveChangesAsync();
+                await _UserManager.CreateAsync(user, admin.Password);
+
+                user = _UserManager.Users.Where(e=>e.UserName==user.UserName).FirstOrDefault();
+                await _UserManager.AddToRoleAsync(user,"Admin");
+
                 return RedirectToAction(nameof(Index));
             }
             return View(admin);
@@ -97,6 +129,18 @@ namespace GHC2.Controllers
             {
                 try
                 {
+                  var user=  _UserManager.Users.Where(u => u.UserName == admin.Nid.ToString()).FirstOrDefault();
+
+                  var token = await _UserManager.GeneratePasswordResetTokenAsync(user);
+
+                  await _UserManager.ResetPasswordAsync(user, token, admin.Password);
+
+                    user.UserName = admin.Nid.ToString();
+                    user.Email = admin.Email;
+                    user.PhoneNumber = admin.Phone.ToString();
+
+
+                   await _UserManager.UpdateAsync(user);
                     _context.Update(admin);
                     await _context.SaveChangesAsync();
                 }
@@ -139,8 +183,11 @@ namespace GHC2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
+            var user = _UserManager.Users.Where(u => u.UserName == id.ToString()).FirstOrDefault();
+
             var admin = await _context.Admins.FindAsync(id);
             _context.Admins.Remove(admin);
+            await _UserManager.DeleteAsync(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

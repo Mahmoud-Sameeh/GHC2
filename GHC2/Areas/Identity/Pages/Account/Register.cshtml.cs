@@ -25,7 +25,7 @@ namespace GHC2.Areas.Identity.Pages.Account
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _db;
         private readonly ILogger<RegisterModel> _logger;
-        
+
         //     private readonly IEmailSender _emailSender;
 
         public RegisterModel(
@@ -85,7 +85,7 @@ namespace GHC2.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-          //  [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            //  [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             //[Display(Name = "Password")]
             public string Password { get; set; }
@@ -106,19 +106,20 @@ namespace GHC2.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-           
-            
+
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-               
-                
-                var user = new IdentityUser {
-                    UserName = Input.UserName, 
-                    Email = Input.Email, 
-                    PasswordHash = Input.Password, 
-                    PhoneNumber = Input.Phone,                
+
+
+                var user = new IdentityUser
+                {
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    PasswordHash = Input.Password,
+                    PhoneNumber = Input.Phone,
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -144,7 +145,7 @@ namespace GHC2.Areas.Identity.Pages.Account
                     else*/
                     #endregion
                     // role does not exist -> create role first
-                  
+
                     if (await _roleManager.FindByNameAsync(Input.Role) == null)
                     {
                         result = await _roleManager.CreateAsync(new IdentityRole(Input.Role));
@@ -157,7 +158,7 @@ namespace GHC2.Areas.Identity.Pages.Account
                     }
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        if(Input.Role== "Doctor")
+                        if (Input.Role == "Doctor")
                         {
                             return RedirectToPage("Doctor");
                         }

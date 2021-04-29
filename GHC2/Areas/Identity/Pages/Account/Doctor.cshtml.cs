@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using GHC2.Data;
 using GHC2.Models;
@@ -53,7 +54,7 @@ namespace GHC2.Areas.Identity.Pages.Account
         {
 
 
-          
+            [Display(Name = "Name")]
             [Required]
             public string UserName { get; set; }
             [Required]
@@ -67,7 +68,7 @@ namespace GHC2.Areas.Identity.Pages.Account
             [Required]
             public string Address { get; set; }
             [Required]
-            public DateTime BirthDate { get; set; }
+            public DateTime BirthDate { get; set; } = DateTime.Now;
 
 
             [Required]
@@ -91,7 +92,7 @@ namespace GHC2.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
             [Required]
-            public int Questions { get; set; } 
+            public int Questions { get; set; }
             [Required]
             public int YearOFGraduation { get; set; }
             [Required]
@@ -109,27 +110,28 @@ namespace GHC2.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            
+
 
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                
+
 
                 var user = new IdentityUser
                 {
-                    
+
                     UserName = Input.UserName,
                     Email = Input.Email,
                     PasswordHash = Input.Password,
                     PhoneNumber = Input.Phone.ToString(),
                 };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                       // role does not exist -> create role first
+                    // role does not exist -> create role first
 
                     if (await _roleManager.FindByNameAsync(Input.Role) == null)
                     {
@@ -144,29 +146,79 @@ namespace GHC2.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                     }
-                    if (Input.Role=="Patient")
+                    if (Input.Role == "Patient")
                     {
-
-                        _db.Patients.Add(new Models.Patient {
+                      
+                        _db.Patients.Add(new Models.Patient
+                        {
                             Nid = Input.SNN,
                             Address = Input.Address,
                             BitrhDate = Input.BirthDate,
-                        //    Degree = Input.Degree,
+                            //    Degree = Input.Degree,
                             Email = Input.Email,
                             Gender = Input.Gender,
                             Phone = Input.Phone,
-                            ImageUrl=Input.ImgUrl,
-                            Name=Input.UserName,
-                            Password=Input.Password,
-                     //       UserName=Input.UserName,
-                       //     Specialty=Input.Speciality
-                        }) ;
+                            ImageUrl = Input.ImgUrl,
+                            Name = Input.UserName,
+                            Password = Input.Password,
+                            //       UserName=Input.UserName,
+                            //     Specialty=Input.Speciality
+                            IdentityId = user.Id
+                        });
                         _db.SaveChanges();
                         return LocalRedirect(returnUrl);
 
+
                     }
+                    if (Input.Role == "Doctor")
+                    {
+
+                        _db.Doctors.Add(new Models.Doctor
+                        {
+                            Nid = Input.SNN,
+                            Address = Input.Address,
+                            //BitrhDate = Input.BirthDate,
+                            BitrhDate = DateTime.Now,
+                            Degree = Input.Degree,
+                            Email = Input.Email,
+                            Gender = Input.Gender,
+                            Phone = Input.Phone,
+                            ImageUrl = Input.ImgUrl,
+                            Name = Input.UserName,
+                            Password = Input.Password,
+                            UserName = Input.UserName,
+                            Specialty = Input.Speciality,
+
+                            IdentityId = user.Id
+                        });
+                    }
+                    _db.SaveChanges();
+                   
+                    if (Input.Role == "Admin")
+                    {
+
+                        _db.Admins.Add(new Models.Admin
+                        {
+                            Nid = Input.SNN,
+                            Address = Input.Address,
+                            //BitrhDate = Input.BirthDate,
+                            BitrhDate = DateTime.Now,
+                            Email = Input.Email,
+                            Gender = Input.Gender,
+                            Phone = Input.Phone,
+                            ImageUrl = Input.ImgUrl,
+                            Name = Input.UserName,
+                            Password = Input.Password,
+                            UserName = Input.UserName,
+                            Position = "Admin",
+
+                            IdentityId = user.Id
+                        });
+                    }
+                    _db.SaveChanges();
+                    return LocalRedirect(returnUrl);
                 }
-                
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

@@ -9,7 +9,7 @@ namespace GHC2.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-     
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -17,7 +17,6 @@ namespace GHC2.Data
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Analysis> Analyses { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
-        public virtual DbSet<Chat> Chats { get; set; }
         public virtual DbSet<Diagnose> Diagnoses { get; set; }
         public virtual DbSet<DiagnosePrescription> DiagnosePrescriptions { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
@@ -25,19 +24,23 @@ namespace GHC2.Data
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PrescriptionMedicine> PrescriptionMedicines { get; set; }
         public virtual DbSet<Radiation> Radiations { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<ChatUser> ChatUsers { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=GHC;Trusted_Connection=True;");
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                //                optionsBuilder.UseSqlServer("Server=Server=DESKTOP-D2R2HM9;Database=GHC;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<ChatUser>()
+              .HasKey(x => new { x.ChatId, x.UserId });
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
 
             modelBuilder.Entity<Admin>(entity =>
@@ -54,7 +57,7 @@ namespace GHC2.Data
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.BitrhDate).HasColumnType("date");
+                entity.Property(e => e.BitrhDate).HasColumnType("datetime").IsRequired();
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
@@ -122,8 +125,7 @@ namespace GHC2.Data
                 entity.Property(e => e.Accepted)
                     .IsRequired()
                     .HasMaxLength(10)
-                    .HasDefaultValueSql("(N'NO')")
-                    .IsFixedLength(true);
+                    .HasDefaultValueSql("NO");
 
                 entity.Property(e => e.AppointmetDateTime).HasColumnType("datetime");
 
@@ -144,32 +146,7 @@ namespace GHC2.Data
                     .HasConstraintName("FK_Appointment_Patient");
             });
 
-            modelBuilder.Entity<Chat>(entity =>
-            {
-                entity.ToTable("Chat");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.DateAndTime).HasColumnType("datetime");
-
-                entity.Property(e => e.DocId).HasColumnName("DocID");
-
-                entity.Property(e => e.Message).IsRequired();
-
-                entity.Property(e => e.PatientId).HasColumnName("PatientID");
-
-                entity.HasOne(d => d.Doc)
-                    .WithMany(p => p.Chats)
-                    .HasForeignKey(d => d.DocId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Chat_Doctor");
-
-                entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.Chats)
-                    .HasForeignKey(d => d.PatientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Chat_Patient");
-            });
 
             modelBuilder.Entity<Diagnose>(entity =>
             {
@@ -236,7 +213,7 @@ namespace GHC2.Data
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.BitrhDate).HasColumnType("date");
+                entity.Property(e => e.BitrhDate).HasColumnType("datetime").IsRequired();
 
                 entity.Property(e => e.Degree)
                     .IsRequired()
@@ -295,7 +272,7 @@ namespace GHC2.Data
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.BitrhDate).HasColumnType("date");
+                entity.Property(e => e.BitrhDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
@@ -314,8 +291,8 @@ namespace GHC2.Data
 
             modelBuilder.Entity<PrescriptionMedicine>(entity =>
             {
-                entity.HasNoKey();
-
+                entity.HasKey(e => e.Id)
+                         .HasName("PK_PrescriptionMedicine");
                 entity.ToTable("Prescription_Medicine");
 
                 entity.Property(e => e.Dose).HasMaxLength(50);
@@ -346,7 +323,6 @@ namespace GHC2.Data
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.AttachUrl)
-                    .IsRequired()
                     .HasColumnName("AttachURL");
 
                 entity.Property(e => e.DateAndTime).HasColumnType("datetime");
@@ -374,9 +350,9 @@ namespace GHC2.Data
                     .HasConstraintName("FK_Radiation_Patient");
             });
 
-      //      OnModelCreatingPartial(modelBuilder);
+            //      OnModelCreatingPartial(modelBuilder);
         }
 
-    //    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        //    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

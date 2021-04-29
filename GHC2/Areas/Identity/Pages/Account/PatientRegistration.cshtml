@@ -1,7 +1,6 @@
 ﻿@page
 @model GHC2.Areas.Identity.Pages.Account.PatientRegistrationModel
-@{
-}
+@{ }
 
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">Doctor</a></li>
@@ -39,7 +38,7 @@
                         <input asp-for="Input.ConfirmPassword" class="form-control" />
                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                     </div>
-               
+
                     <button type="submit" class="btn btn-primary">Register</button>
                 </div>
                 <div class="col-md-4 col-md-offset-2">
@@ -61,7 +60,7 @@
                         <input asp-for="Input.Email" class="form-control" />
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
-                
+
                 </div>
                 <div class="col-md-4 col-md-offset-2">
                     <hr />
@@ -81,7 +80,7 @@
                         <input asp-for="Input.Address" class="form-control" />
                         <span asp-validation-for="Input.Address" class="text-danger"></span>
                     </div>
-                  
+
 
                 </div>
             </div>

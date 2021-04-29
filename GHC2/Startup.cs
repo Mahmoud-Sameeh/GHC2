@@ -1,4 +1,5 @@
 using GHC2.Data;
+using GHC2.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,13 +30,15 @@ namespace GHC2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHealthChecks();
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddIdentity<IdentityUser,IdentityRole>(options => {
+            services.AddDistributedMemoryCache();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+            });
+            services.AddIdentity<IdentityUser, IdentityRole>(options => {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
@@ -45,10 +48,28 @@ namespace GHC2
                 options.Password.RequireNonAlphanumeric = false;
 
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+             .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+             
 
+            services.AddMvc();
+
+            services.AddSignalR();
+
+            services.AddCors(option =>
+            {
+                option.AddPolicy("AutomationCors", builder =>
+                {
+                    builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins("YOUR LOCALHOST URL",
+                                     "YOUR HOST URL")
+                        .AllowCredentials();
+                });
+            });
             services.AddControllersWithViews();
+
             services.AddRazorPages();
         }
 
@@ -68,6 +89,7 @@ namespace GHC2
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 
@@ -77,8 +99,16 @@ namespace GHC2
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                 name: "HomePage",
+                  pattern: "{controller=Home}/{action=HomePage}/{id?}");
+                endpoints.MapControllerRoute(
+                  name: "default",
+                  pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //endpoints.MapControllerRoute(
+                // name: "Doctors",
+                // pattern: "{controller=Doctors}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }
